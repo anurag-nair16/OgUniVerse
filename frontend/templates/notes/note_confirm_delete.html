@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+<style>
+  body {
+    background-image: url("{% static 'media/back.webp' %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 10px;
+  }
+</style>
+{% endblock%}
+{% block content %}
+  <h1>Delete Note</h1>
+  <p>Are you sure you want to delete "{{ note.title }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Delete</button>
+  </form>
+  <a href="{% url 'notes:note_details' note.pk %}">Cancel</a>
+{% endblock %}

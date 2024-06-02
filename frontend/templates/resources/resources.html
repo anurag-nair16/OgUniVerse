@@ -1,0 +1,56 @@
+{% extends "base/base2.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+  body {
+    background-image: url("{% static 'media/back.webp' %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 10px;
+  }
+</style>
+{%endblock head%}
+
+
+{% block list1 %}
+<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+  {% for resource in resources %}
+      {% if resource.uuid in saved_resource_ids %}
+          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">{{ resource.title }}</a></li>
+      {% endif %}
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block list2 %}
+<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+  {% for resource in resources %}
+      {% if resource.uploader.uuid == request.user.uuid %}
+          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">{{ resource.title }}</a></li>
+      {% endif %}
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block dir %}
+<div class="container">
+  <div class="p-4"></div>
+  <div class="row">
+    {% for domain in domains %}
+      <div class="col-md-4">
+        <a href="/button2" class="btn btn-primary btn-lg btn-block mb-3" onclick="appendTitle(this)">{{ domain.name }}</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  function appendTitle(element) {
+    var currentUrl = window.location.href;
+    var title = element.innerText.trim().replace(/\s+/g, '-').toLowerCase();
+    var newUrl = currentUrl.endsWith('/') ? currentUrl + title : currentUrl + '/' + title;
+    element.href = newUrl;
+  }
+</script>
+{% endblock %}

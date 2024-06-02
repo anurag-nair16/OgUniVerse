@@ -1,0 +1,21 @@
+{% extends "base.base.html" %}
+{% load static %}
+{% block head %}
+<style>
+  body {
+    background-image: url("{% static 'media/back.webp' %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 10px;
+  }
+</style>
+{% endblock%}
+{% block content %}
+    <h1>Share Note</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Share</button>
+    </form>
+    <a href="{% url 'notes:note_detail' note.pk %}">Cancel</a>
+{% endblock %}

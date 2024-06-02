@@ -1,0 +1,51 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="column is-6 is-offset-3">
+    <div class = "box">
+        <div id = "chat-messages">
+    </div>
+
+    <div class="field">
+        
+        <div class="control">
+            <input class="input" type="text" placeholder="Message" id="chat-message-input">
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="control">
+            <a class="button is-info" id="chat-message-submit">Submit</a>
+        </div>
+    </div>
+
+    <small class = "has-text-grey-light">Your username: {{username}}</small>
+</div>
+
+{{room_name|json_script:"json-roomname"}}
+{{username|json_script:"json-username"}}
+
+<script>
+    const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+    const username = JSON.parse(document.getElementById('json-username').textContent);
+
+    const chatSocket = new WebSocket(
+    'ws://'
+    + window.location.host
+    + '/ws/rooms/'
+    + roomName
+    + '/'
+);
+
+
+    chatSocket.onmessage = function(e) {
+        console.log('onmessage')
+
+    };
+
+    chatSocket.onclose = function(e){
+        console.log('The socket closed')
+    };
+
+</script>
+{% endblock %}

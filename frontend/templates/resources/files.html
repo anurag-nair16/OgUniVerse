@@ -1,0 +1,76 @@
+{% extends "base/base2.html" %}
+{% load static%}
+
+{% block head %}
+<style>
+  body {
+    background-image: url("{% static 'media/back.webp' %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 10px;
+  }
+</style>
+{%endblock head%}
+
+{% block list1 %}
+<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+  {% for resource in resources_all %}
+      {% if resource.uuid in saved_resource_ids_all %}
+          <li><a href="" class="link-body-emphasis d-inline-flex text-decoration-none rounded">{{ resource.title }}</a></li>
+      {% endif %}
+  {% endfor %}
+</ul>
+{% endblock %}
+
+
+{% block list2 %}
+<ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+  {% for resource in resources_all %}
+      {% if resource.uploader.uuid == request.user.uuid %}
+          <li><a href="" class="link-body-emphasis d-inline-flex text-decoration-none rounded">{{ resource.title }}</a></li>
+      {% endif %}
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block dir %}
+<div class="container">
+  <div class="mt-4"></div>
+  {% for resource in resources %}
+  <div class="col">
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <h5 class="card-title">{{ resource.title }}</h5>
+              <p class="card-text">Uploaded by: {{ resource.uploader.username }}</p>
+              <p class="card-text">Date Uploaded: {{ resource.upload_date }}</p>
+              <div class="row">
+                  <div class="col-auto">
+                      <a href="{% url 'resources:download_resource' resource_uuid=resource.uuid %}" class="btn btn-sm btn-primary">Download</a>
+                  </div>
+                  <div class="col-auto">
+                      <a href="{{ resource.file.url }}" class="btn btn-sm btn-secondary">View</a>
+                  </div>
+                  <div class="col-auto">
+                      {% if resource.uuid in saved_resource_ids %}
+                          <!-- If resource is saved, display unsave button -->
+                          <form action="{% url 'resources:unsave_resource' resource_uuid=resource.uuid %}" method="POST">
+                              {% csrf_token %}
+                              <!-- Hidden input field to hold the resource UUID -->
+                              <input type="hidden" name="resource_uuid" value="{{ resource.uuid }}">
+                              <button type="submit" class="btn btn-sm btn-outline-secondary" style="background-color: red; color: white;">Unsave</button>
+                          </form>
+                      {% else %}
+                          <!-- If resource is not saved, display save button -->
+                          <form action="{% url 'resources:save_resource' resource_uuid=resource.uuid %}" method="POST">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-sm btn-outline-secondary" style="background-color: green; color: white;">Save</button>
+                          </form>
+                      {% endif %}
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

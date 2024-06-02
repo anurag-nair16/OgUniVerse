@@ -1,0 +1,54 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">Update Your Profile</div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="courses" class="form-label">Courses</label>
+                            <select class="form-select" id="courses" name="courses" required/>
+                                {% for course in form.courses.field.choices %}
+                                    <option value="{{ course.0 }}" {% if user_profile.courses == course.0 %} selected {% endif %}>{{ course.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="preferred_study_methods" class="form-label">Preferred Study Methods</label>
+                            <textarea class="form-control" id="preferred_study_methods" name="preferred_study_methods" rows="3" required/>{{ user_profile.preferred_study_methods }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="goals" class="form-label">Goals</label>
+                            <textarea class="form-control" id="goals" name="goals" rows="3" required/>{{ user_profile.goals }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="domains" class="form-label">Domains</label>
+                            <select class="form-select" id="domains" name="domains" multiple size="5" required/>
+                                {% for domain in form.domains.field.choices %}
+                                    <option value="{{ domain.0 }}" {% if domain.0 in user_profile.domains.all.values_list %} selected {% endif %}>{{ domain.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="availability" class="form-label">Availability</label>
+                            <select class="form-select" id="availability" name="availability" required>
+                                {% for choice_value, choice_label in form.availability.field.choices %}
+                                    <option value="{{ choice_value }}" {% if user_profile.availability == choice_value %} selected {% endif %}>{{ choice_label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
